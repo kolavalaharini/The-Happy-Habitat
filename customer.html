@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Customer Portal - Eco Vibes</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Licorice&display=swap" rel="stylesheet">
+ 
+<style>
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: #f9fbf9;
+    margin: 0;
+    padding: 0;
+  }
+  .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 25px;
+    background: linear-gradient(90deg, #43a047, #2e7d32);
+    color: white;
+  }
+
+  .navbar .logo-container h1 { margin: 0; font-size: 1.5em; }
+  .navbar ul {
+    display: flex;
+    gap: 15px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    align-items: center;
+  }
+  .navbar li { display: inline-flex; align-items: center; }
+  .navbar a {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.08em;
+  }
+ 
+  .navbar a:hover { color: #c8e6c9; }
+  .container {
+    width: 90%;
+    max-width: 900px;
+    margin: 40px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  }
+  h2 {
+    color: #2e7d32;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  p {
+    margin: 8px 0;
+    font-size: 1em;
+    color: #555;
+  }
+  .orders {
+    margin-top: 30px;
+  }
+  .order-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 15px;
+    background: #f1f8f1;
+  }
+  .order-card h3 { margin: 0 0 10px; color: #2e7d32; }
+  .order-card p { margin: 4px 0; font-size: 0.95em; color: #333; }
+  .logo-container { display: flex; align-items: center; gap: 8px; }
+  .logo-img {
+    width: 36px;
+    height: 36px;
+    border-radius: 40%;
+    object-fit: contain;
+    background: rgb(30, 116, 55);
+    padding: 1px;
+    box-shadow: 0 0 4px rgba(0,0,0,0.1);
+  }
+  .logo-container h1 { font-size: 1.4rem; font-family: 'Licorice', cursive; font-weight: 700; margin: 0; color: white; }
+</style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="logo-container">
+    <img src="the happy.jpg" alt="Thehappyhabitat Logo" class="logo-img">
+    <h1>The happy habitat</h1>
+  </div>
+  <ul>
+    <li><a href="home.html"><i class="fa-solid fa-house"></i>Home</a></li>
+    <li><a href="cart.html"><i class="fa-solid fa-cart-shopping"></i> Cart</a></li>
+    <li><a href="index.html"><i class="fa-solid fa-store"></i>Shop </a></li>
+    <li>
+      <a href="#" onclick="logoutUser()">
+        <i class="fa fa-sign-out" aria-hidden="true"></i> Logout
+      </a>
+    </li>
+
+
+    <li id="admin-link" style="display:none;">
+      <a href="admin.html"><i class="fa-solid fa-lock"></i> Admin</a>
+    </li>
+    
+  </ul>
+</nav>
+
+<div class="container">
+  <h2><i class="fa-regular fa-user"></i> Customer Details</h2>
+  <p><strong>Name:</strong> <span id="custName"></span></p>
+  <p><strong>Email:</strong> <span id="custEmail"></span></p>
+  <p><strong>Phone:</strong> <span id="custPhone"></span></p>
+
+  <div class="orders">
+    <h2><i class="fa-solid fa-box"></i> Your Orders</h2>
+    <div id="ordersList">
+      <p>No orders placed yet.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Fetch logged-in user
+  const user = JSON.parse(sessionStorage.getItem("loggedInUser")) || JSON.parse(localStorage.getItem("currentUser"));
+
+  if(!user){
+      alert("Please login first!");
+      window.location.href = "Register.html";
+  } else {
+      document.getElementById("custName").textContent = user.name;
+      document.getElementById("custEmail").textContent = user.email;
+      document.getElementById("custPhone").textContent = user.phone;
+  }
+
+  // Fetch user orders
+  const ordersKey = "orders_" + user.email;
+  const orders = JSON.parse(localStorage.getItem(ordersKey)) || [];
+  const ordersList = document.getElementById("ordersList");
+  ordersList.innerHTML = '';
+
+  if(orders.length === 0){
+    ordersList.innerHTML = '<p>No orders placed yet.</p>';
+  } else {
+    orders.forEach((order, index) => {
+      const div = document.createElement('div');
+      div.className = 'order-card';
+      div.innerHTML = `
+        <h3>Order #${index + 1} - ${order.date}</h3>
+        <p><strong>Items:</strong> ${order.items.join(', ')}</p>
+        <p><strong>Subtotal:</strong> ₹${order.subtotal.toFixed(2)}</p>
+        <p><strong>Shipping:</strong> ₹${order.shipping.toFixed(2)}</p>
+        <p><strong>Discount:</strong> -₹${order.discount.toFixed(2)}</p>
+        <p><strong>Total:</strong> ₹${order.total.toFixed(2)}</p>
+        <p><strong>Payment Method:</strong> ${order.paymentMethod.toUpperCase()}</p>
+      `;
+      ordersList.appendChild(div);
+    });
+  }
+
+  // Logout function
+  function logoutUser(){
+    sessionStorage.removeItem("loggedInUser");
+    localStorage.removeItem("currentUser");
+    window.location.href = "Register.html";
+  }
+</script>
+
+</body>
+</html>
+

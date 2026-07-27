@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Eco Vibes - Welcome Home</title>
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f9fbf9;
+      overflow-x: hidden;
+    }
+
+    /* Navbar */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 30px;
+      background: linear-gradient(90deg, #43a047, #2e7d32);
+      color: white;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .navbar ul { list-style: none; display: flex; gap: 20px; }
+    .navbar li { display: inline; }
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s;
+    }
+    .navbar a:hover { color: #c8e6c9; }
+   /* Icon Spacing */
+    .navbar a i {
+      margin-right: 8px;
+      font-size: 1.1em;
+      vertical-align: middle;
+    }
+    /* Logo container */
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Logo image */
+.logo-img {
+  width: 36px;
+  height: 36px;
+  border-radius: 40%;
+  object-fit: contain;
+  background: rgb(30, 116, 55);
+  padding: 1px;
+  box-shadow: 0 0 4px rgba(0,0,0,0.1);
+}
+
+/* Logo text */
+.logo-container h1 {
+  font-size: 1.2rem;
+  font-family: 'Licorice', cursive;
+  font-weight: 700;
+  margin: 0;
+  color: white;
+}
+
+
+    /* Hero Section with Video */
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 85vh;
+      overflow: hidden;
+    }
+    .hero video {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: brightness(70%);
+    }
+    .hero-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      text-align: center;
+      z-index: 2;
+    }
+    .hero-text h1 {
+      font-size: 3em;
+      margin-bottom: 10px;
+      animation: fadeInDown 2s;
+    }
+    .hero-text p {
+      font-size: 1.2em;
+      animation: fadeInUp 2s;
+    }
+
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Info Sections */
+    .info-section {
+      padding: 60px 80px;
+      text-align: center;
+      background: white;
+      margin: 40px auto;
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      width: 85%;
+      opacity: 0;
+      transform: translateY(50px);
+      transition: all 1s ease;
+    }
+    .info-section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .info-section h2 {
+      color: #2e7d32;
+      margin-bottom: 20px;
+    }
+    .info-section p {
+      font-size: 1.1em;
+      color: #555;
+      line-height: 1.6;
+    }
+
+    /* Footer */
+    footer {
+      background: #2e7d32;
+      color: white;
+      padding: 30px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      text-align: left;
+    }
+    footer div { flex: 1; min-width: 250px; margin: 10px; }
+    footer h3 { border-bottom: 2px solid #c8e6c9; padding-bottom: 8px; }
+    footer p, footer a {
+      font-size: 0.9em;
+      color: #e0f2f1;
+      text-decoration: none;
+      line-height: 1.5;
+      display: block;
+      margin-top: 10px;
+    }
+    .Mission-card, .Manufacturers-card, .Products-card {
+    transition: all 0.3s ease; /* 👈 makes animation smooth */
+    border-radius: 12px;
+    background: white;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    padding: 20px;
+    cursor: pointer;
+  }
+
+  /* Hover effect */
+  .Mission-card:hover,
+  .Manufacturers-card:hover,
+  .Products-card:hover {
+    transform: translateY(-10px) scale(1.03);
+    box-shadow: 0 10px 25px rgba(0,128,0,0.2);
+    background: #f0fff5;
+  }
+  
+
+
+    footer a:hover { color: #fff; }
+  </style>
+</head>
+
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="logo-container">
+      <img src="the happy.jpg" alt="Thehappyhabitat Logo" class="logo-img">
+      <h1>The happy habitat</h1>
+    </div>
+    <ul>
+      <li><a href="home.html"><i class="fa-solid fa-house"></i></a></li>
+     
+     
+      <li><a href="index.html"><i class="fa-solid fa-store"></i></a></li>
+      <li><a href="customer.html"><i class="fa-solid fa-user"></i></a></li>
+      <li>
+        <a href="#" onclick="logoutUser()">
+          <i class="fa fa-sign-out" aria-hidden="true"></i> Logout
+        </a>
+      </li>
+    </ul>
+  </nav>
+  
+
+  <script>
+    // Navigate to wishlist page
+    function goToWishlist() {
+      window.location.href = "wishlist.html";
+    }
+  
+    // Logout function
+    function logoutUser() {
+      sessionStorage.removeItem('loggedInUser');
+      localStorage.removeItem('cart');
+      localStorage.removeItem('wishlist');
+      window.location.href = "register.html";
+    }
+  
+    // Update cart & wishlist counts dynamically
+    function updateCounts() {
+      const cartCountElem = document.getElementById("cart-count");
+      const wishlistCountElem = document.getElementById("wishlist-count");
+  
+      const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+      const wishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
+  
+      if(cartCountElem) {
+        const totalQty = cart.reduce((sum, item) => sum + (item.qty || 1), 0);
+        cartCountElem.textContent = totalQty;
+      }
+      if(wishlistCountElem) {
+        wishlistCountElem.textContent = wishlist.length;
+      }
+    }
+  
+    document.addEventListener("DOMContentLoaded", updateCounts);
+    setInterval(updateCounts, 1000); // keeps counts in sync across tabs/pages
+  </script>
+  
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <video autoplay muted loop playsinline>
+      <source src="project.mp4" type="video/mp4">
+      Your browser does not support HTML5 video.
+    </video>
+    <div class="hero-text">
+      <h1>Welcome to The happy habitat</h1>
+      <p>Your one-stop shop for sustainable, eco-friendly products. Make a difference with every purchase!</p>
+    </div>
+  </section>
+
+  <!-- Info Sections -->
+  <section class="info-section Mission-card">
+    <h2>Our Mission</h2>
+    <p>Eco Vibes aims to make eco-friendly living simple and accessible for everyone. We bring you sustainable products made with love for the planet — reducing waste and promoting a greener lifestyle.</p>
+  </section>
+
+  <section class="info-section Products-card">
+    <h2>Our Products</h2>
+    <p>From biodegradable cleaning tools to bamboo kitchenware and natural beauty items — every product at Eco Vibes is ethically sourced and planet-approved.</p>
+  </section>
+
+  <section class="info-section  Manufacturers-card">
+    <h2>Our Manufacturers</h2>
+    <p>We partner with responsible local artisans and eco-certified manufacturers who share our passion for quality, sustainability, and fair trade.</p>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div>
+      <h3>About Us</h3>
+      <p>Eco Vibes is a mission-driven marketplace for eco-conscious consumers. Together, we can make sustainable living the norm.</p>
+    </div>
+    <div>
+      <h3>Our Products</h3>
+      <a href="index.html">Home Essentials</a>
+      <a href="index.html">Beauty & Wellness</a>
+      <a href="index.html">Cleaning Solutions</a>
+      <a href="index.html">Gift & Decor</a>
+    </div>
+    <div>
+      <h3>Contact</h3>
+      <p>📍Tirupati</p>
+      <p>📧 contact@Thehappyhabitat.com</p>
+      <p>📞 +91 7801018924</p>
+    </div>
+  </footer>
+
+  <script>
+    // --- Session check ---
+    const loggedInUser = sessionStorage.getItem('loggedInUser');
+    if(!loggedInUser){
+      alert("Please login first!");
+      window.location.href = "register.html"; 
+    }
+
+    function logoutUser(){
+      sessionStorage.removeItem('loggedInUser');
+      localStorage.removeItem('cart');
+      window.location.href = "register.html";
+    }
+
+    // --- Scroll Animation ---
+    const sections = document.querySelectorAll('.info-section');
+    const showSection = () => {
+      const triggerBottom = window.innerHeight * 0.85;
+      sections.forEach(sec => {
+        const top = sec.getBoundingClientRect().top;
+        if(top < triggerBottom) sec.classList.add('visible');
+      });
+    };
+    window.addEventListener('scroll', showSection);
+    showSection();
+  </script>
+</body>
+</html>

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Wishlist - The Happy Habitat</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Licorice&display=swap" rel="stylesheet">
+  
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f0f4f8;
+    }
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      background: linear-gradient(90deg, #43a047, #2e7d32);
+      color: white;
+     
+    }
+    .navbar ul {
+      list-style: none;
+      display: flex;
+      margin: 0;
+      gap: 18px;
+    }
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    } .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    /* Logo image */
+.logo-img {
+  width: 36px;
+  height: 36px;
+  border-radius: 40%;
+  object-fit: contain;
+  background: rgb(30, 116, 55);
+  padding: 1px;
+  box-shadow: 0 0 4px rgba(0,0,0,0.1);
+}
+/* Logo text */
+.logo-container h1 {
+  font-size: 1.5rem;
+  font-family: 'Licorice', cursive;
+  font-weight: 700;
+  margin: 0;
+  color: white;
+}
+
+    footer {
+      text-align: center;
+      background: #2e7d32;
+      color: white;
+      padding: 10px;
+      font-size: 0.9em;
+      margin-top: 40px;
+    }
+  
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 18px;
+      margin: 20px;
+    }
+    .product-card {
+      background: #fff;
+      padding: 12px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      transition: transform 0.3s;
+    }
+    .product-card:hover {
+      transform: translateY(-4px);
+    }
+    .product-card img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+    .add-cart {
+      background: #2e7d32;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: all 0.3s ease;
+    }
+    .add-cart:hover {
+      background: #45a049;
+      transform: scale(1.05);
+    }
+    .remove {
+      background: #d32f2f;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 7px 12px;
+      font-size: 0.9em;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: all 0.3s ease;
+    }
+    .remove:hover {
+      background: #f44336;
+      transform: scale(1.05);
+    }
+    .cart-count {
+      background: red;
+      color: white;
+      border-radius: 50%;
+      padding: 3px 7px;
+      font-size: 12px;
+      vertical-align: super;
+      margin-left: 4px;
+    }
+ 
+  
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  
+
+
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="logo-container">
+      <img src="the happy.jpg" alt="Logo" class="logo-img">
+      <h1>The Happy Habitat</h1>
+    </div>
+    <ul>
+      <li><a href="home.html"><i class="fa-solid fa-house"></i> Home</a></li>
+      <li><a href="cart.html"><i class="fa-solid fa-cart-shopping"></i> Cart <span id="cart-count" class="cart-count">0</span></a></li>
+      <li><a href="index.html"><i class="fa-solid fa-store"></i> Shop</a></li>
+      <li><a href="#" onclick="logoutUser()"><i class="fa fa-sign-out"></i> Logout</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <h2 style="text-align:center; margin-top:15px;">My Wishlist</h2>
+    <div id="wishlistGrid" class="products-grid"></div>
+  </main>
+
+  <footer>
+    &copy; 2025 The Happy Habitat | Sustainable Living for a Better Tomorrow
+  </footer>
+
+  <script>
+    // --- USER LOGIN CHECK ---
+    const loggedInUser = JSON.parse(sessionStorage.getItem("loggedInUser"));
+    if (!loggedInUser) window.location.href = "register.html";
+
+    function logoutUser() {
+      sessionStorage.removeItem("loggedInUser");
+      window.location.href = "register.html";
+    }
+
+    // --- KEYS ---
+    const wishlistKey = 'wishlist_' + loggedInUser.email;
+    const cartKey = 'cart_' + loggedInUser.email;
+
+    // --- GETTERS ---
+    const getProducts = () => JSON.parse(localStorage.getItem("products")) || [];
+    const getWishlist = () => JSON.parse(localStorage.getItem(wishlistKey) || "[]");
+    const saveWishlist = (wishlist) => localStorage.setItem(wishlistKey, JSON.stringify(wishlist));
+    const getCart = () => JSON.parse(localStorage.getItem(cartKey) || "[]");
+    const saveCart = (cart) => {
+      localStorage.setItem(cartKey, JSON.stringify(cart));
+      updateCartCount();
+    };
+
+    const wishlistGrid = document.getElementById("wishlistGrid");
+
+    // --- RENDER WISHLIST ---
+    function renderWishlist() {
+      let wishlist = getWishlist(); // array of product objects
+      const adminProducts = getProducts(); // current products from admin
+
+      // 🔄 Auto-remove deleted products
+      wishlist = wishlist.filter(wItem => adminProducts.some(a => a.id === wItem.id));
+      saveWishlist(wishlist);
+
+      wishlistGrid.innerHTML = "";
+
+      if (wishlist.length === 0) {
+        wishlistGrid.innerHTML = "<p style='text-align:center;'>Your wishlist is empty 💔</p>";
+        return;
+      }
+
+      wishlist.forEach(prod => {
+        const updated = adminProducts.find(p => p.id === prod.id) || prod;
+        const card = document.createElement("div");
+        card.className = "product-card";
+        card.innerHTML = `
+          <img src="${updated.img}" alt="${updated.name}">
+          <h3>${updated.name}</h3>
+          <p>₹${updated.price}</p>
+          <p style="font-size:0.9em;color:#555;">${updated.desc}</p>
+          <button class="add-cart" data-id="${updated.id}">Add to Cart</button>
+          <button class="remove" data-id="${updated.id}">Remove</button>
+        `;
+        wishlistGrid.appendChild(card);
+      });
+    }
+
+    // --- BUTTON ACTIONS ---
+    wishlistGrid.addEventListener("click", (e) => {
+      const id = parseInt(e.target.dataset.id);
+      if (!id) return;
+
+      // Add to cart
+      if (e.target.classList.contains("add-cart")) {
+        const cart = getCart();
+        const products = getProducts();
+        const prod = products.find(p => p.id === id);
+        if (!prod) return;
+
+        const existing = cart.find(p => p.id === id);
+        if (existing) existing.qty++;
+        else cart.push({ ...prod, qty: 1 });
+
+        saveCart(cart);
+        alert(`${prod.name} added to cart!`);
+      }
+
+      // Remove from wishlist
+      if (e.target.classList.contains("remove")) {
+        let wishlist = getWishlist();
+        wishlist = wishlist.filter(item => item.id !== id);
+        saveWishlist(wishlist);
+        renderWishlist();
+        alert("❌ Removed from wishlist");
+      }
+    });
+
+    // --- CART COUNT ---
+    function updateCartCount() {
+      const cart = getCart();
+      const total = cart.reduce((sum, i) => sum + (i.qty || 1), 0);
+      document.ge_tElementById("cart-count").textContent = total;
+    }
+
+    // --- INITIAL LOAD ---
+    document.addEventListener("DOMContentLoaded", () => {
+      renderWishlist();
+      updateCartCount();
+    });
+  </script>
+</body>
+</html>
